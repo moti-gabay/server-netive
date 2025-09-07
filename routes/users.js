@@ -1,10 +1,11 @@
 
 const express = require("express");
 const User = require("../models/User");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/",authMiddleware, async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
@@ -25,7 +26,7 @@ router.get("/", async (req, res) => {
 // });
 
 // 3. עדכון משימה לפי ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!user) return res.status(404).json({ error: "Task not found" });
@@ -36,7 +37,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // 4. מחיקת משימה לפי ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware,async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ error: "Task not found" });
