@@ -5,3 +5,5 @@ const Task = mongoose.model("Task", new mongoose.Schema({
   completed: { type: Boolean, default: false },
 }));
 
+
+module.exports = Task;

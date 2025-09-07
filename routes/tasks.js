@@ -14,15 +14,24 @@ router.get("/", async (req, res) => {
 });
 
 // 2. יצירת משימה חדשה
+// יצירת משימה חדשה
 router.post("/", async (req, res) => {
   try {
-    const task = new Task(req.body);
+    const { title } = req.body;
+    if (!title) {
+      return res.status(400).json({ error: "Title is required" });
+    }
+
+    const task = new Task({ title, completed: false });
     await task.save();
-    res.status(201).json(task);
+
+    res.json(task);
   } catch (err) {
-    res.status(400).json({ error: "Failed to create task" });
+    console.error("Error creating task:", err);
+    res.status(500).json({ error: "Failed to create task" });
   }
 });
+
 
 // 3. עדכון משימה לפי ID
 router.put("/:id", async (req, res) => {
