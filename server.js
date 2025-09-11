@@ -17,7 +17,7 @@ app.use(cookieParser());
 
 
 app.use("/auth", require("./routes/auth"));
-app.use("/tasks", require("./routes/tasks"));
+app.use("/todos", require("./routes/tasks"));
 app.use("/users", require("./routes/users"));
 
 
