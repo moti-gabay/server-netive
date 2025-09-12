@@ -7,7 +7,7 @@ const router = express.Router();
 // הרשמה
 router.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
 
     // בדיקה אם המשתמש כבר קיים
     const existingUser = await User.findOne({ email });
@@ -16,7 +16,7 @@ router.post("/register", async (req, res) => {
     }
 
     // יצירת משתמש חדש
-    const user = new User({ email, password });
+    const user = new User({ email, password, name });
     await user.save();
 
     res.json({ message: "User registered successfully" });
