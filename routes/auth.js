@@ -45,8 +45,8 @@ router.post("/login", async (req, res) => {
     // שליחה ב-Cookie
     res.cookie(process.env.TOKEN_KEY, token, {
       httpOnly: true,     // לא נגיש ל-JS בצד לקוח
-      secure: process.env.NODE_ENV === "production", // רק HTTPS בפרודקשן
-      sameSite: "strict", // מגן מ-CSRF
+      secure: false, // רק HTTPS בפרודקשן
+      sameSite: "lax", // מגן מ-CSRF
       maxAge: 24 * 60 * 60 * 1000, // יום אחד
     });
 
@@ -59,6 +59,26 @@ router.post("/login", async (req, res) => {
 router.post("/logout", (req, res) => {
   res.clearCookie(process.env.TOKEN_KEY);
   res.json({ message: "Logged out successfully" });
+});
+
+router.get("/me", async (req, res) => {
+  try {
+    const token = req.cookies.token; // JWT בעוגיות
+    if (!token) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (err) {
+    res.status(401).json({ error: "Invalid token" });
+  }
 });
 
 module.exports = router;
