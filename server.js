@@ -8,20 +8,18 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(cors({
-  origin: ["http://192.168.1.92:8081","http://192.168.1.92:5000","http://localhost:8081","http://localhost:5000"], // או כתובת האפליקציה שלך במקום *
+  origin: ["http://192.168.1.92:8081", "http://192.168.1.92:5000", "http://localhost:8081", "http://localhost:5000"], // או כתובת האפליקציה שלך במקום *
   credentials: true, // אם אתה עובד עם עוגיות
 }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/", (req,res)=>{
-  res.json("server netive is running");
-});
 
 
 app.use("/auth", require("./routes/auth"));
 app.use("/todos", require("./routes/tasks"));
 app.use("/users", require("./routes/users"));
+
 
 
 async function startServer() {
